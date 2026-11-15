@@ -1,0 +1,41 @@
+name: Answer eval (live)
+
+# Asks Claude the golden questions over retrieved passages and checks the
+# citations. Manual trigger only: it uses the API key and costs a few cents.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "How many answerable questions to ask (max 50)"
+        required: false
+        default: "20"
+
+permissions:
+  contents: read
+
+jobs:
+  answers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/@huggingface/transformers/.cache
+          key: embedding-model-all-MiniLM-L6-v2
+      - name: Run the answer eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+        run: npm run eval:answers --silent -- --limit "$LIMIT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: answer-eval
+          path: evals/results/
+          retention-days: 30

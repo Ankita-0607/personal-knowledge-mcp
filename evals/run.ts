@@ -106,3 +106,15 @@ fs.mkdirSync(path.join(EVALS_DIR, "results"), { recursive: true });
 fs.writeFileSync(path.join(EVALS_DIR, "results", `${stem}.json`), JSON.stringify(results, null, 2) + "\n");
 fs.writeFileSync(path.join(EVALS_DIR, "results", `${stem}.md`), markdown + "\n");
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown + "\n");
+
+// Regression gate for CI: `--min-recall3 0.85` fails the run if hybrid recall@3 drops below it.
+const gateFlag = process.argv.indexOf("--min-recall3");
+if (gateFlag !== -1) {
+  const threshold = Number(process.argv[gateFlag + 1]);
+  const actual = metricsFor("hybrid", cases).recall3;
+  if (actual < threshold) {
+    console.error(`Hybrid recall@3 is ${pct(actual)}, below the gate of ${pct(threshold)}.`);
+    process.exit(1);
+  }
+  console.error(`Hybrid recall@3 ${pct(actual)} meets the gate of ${pct(threshold)}.`);
+}
