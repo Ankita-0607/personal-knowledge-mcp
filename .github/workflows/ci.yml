@@ -28,8 +28,8 @@ jobs:
         with:
           path: node_modules/@huggingface/transformers/.cache
           key: embedding-model-all-MiniLM-L6-v2
-      - name: Retrieval eval with the real embedding model
-        run: npm run eval --silent
+      - name: Retrieval eval with the real embedding model (fails below 75% hybrid recall@3)
+        run: npm run eval --silent -- --min-recall3 0.75
       - uses: actions/upload-artifact@v4
         if: always()
         with:

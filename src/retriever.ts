@@ -44,7 +44,8 @@ function dot(a: Float32Array, b: Float32Array): number {
 
 /**
  * How much the embedding ranking counts relative to the keyword ranking in
- * hybrid mode. Chosen with the weight sweep in evals/run.ts; see the README.
+ * hybrid mode. The weight sweep in evals/run.ts found no weight that is
+ * reliably better than equal weighting on the dev questions; see the README.
  */
 export const DEFAULT_VECTOR_WEIGHT = 1;
 

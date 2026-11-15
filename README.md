@@ -31,14 +31,42 @@ flowchart LR
 
 ## Retrieval results
 
-<!-- RETRIEVAL_RESULTS -->
-_Results from CI will be recorded here._
-<!-- /RETRIEVAL_RESULTS -->
+Measured in CI ([run 43665978908](https://github.com/Ankita-0607/personal-knowledge-mcp/actions/runs/43665978908)) with the real embedding model, on 50 questions:
 
-The corpus is the bundled [sample notes](sample-notes) (14 notes, 69 passages),
-so treat the numbers as a regression check on the retrieval design, not as a
-benchmark. A result only counts if it is the exact section that answers the
-question, not just the right note. Reproduce with `npm run eval`.
+| Ranking | Recall@1 | Recall@3 | Recall@5 | MRR@10 |
+|---|---:|---:|---:|---:|
+| Keyword only (BM25) | 50% | 66% | 70% | 0.578 |
+| Embeddings only | 64% | 80% | 90% | 0.738 |
+| Hybrid (RRF, default) | 56% | 80% | 84% | 0.688 |
+
+Split by question type:
+
+| Question type | Ranking | Recall@1 | Recall@3 | MRR@10 |
+|---|---|---:|---:|---:|
+| Paraphrased (42): few words shared with the note | Keyword | 43% | 60% | 0.510 |
+| | Embeddings | 60% | 79% | 0.706 |
+| | Hybrid | 50% | 76% | 0.640 |
+| Keyword (8): shares the note's key terms | Keyword | 88% | 100% | 0.938 |
+| | Embeddings | 88% | 88% | 0.906 |
+| | Hybrid | 88% | 100% | 0.938 |
+
+### What the eval showed
+
+The expectation going in was that hybrid would beat both single rankings. It did not:
+
+- **Embeddings carry paraphrased questions.** Keyword search finds the right section first only 43% of the time when the question shares few words with the note; embeddings manage 60%.
+- **Equal-weight fusion costs accuracy on those questions.** A weak keyword ranking drags a good embedding ranking down (MRR 0.640 against 0.706).
+- **Keywords still earn their place on exact terms.** For questions built around a specific term (`DLQ alarm`, `strangler fig`), hybrid matches keyword search at 100% recall@3 while embeddings alone drop to 88%.
+
+To see whether weighting the embedding ranking more heavily would fix this, the eval sweeps that weight on half the questions (dev) and reports the other half (test). On dev, every weight from 0.5 to 6 lands within 0.02 MRR of the others (0.667 to 0.683), with equal weighting marginally best, so the data does not justify changing the default. The test half does favour heavier embedding weights (MRR 0.692 at weight 1, 0.777 at weight 4), which is a reason to grow the question set, not to tune on test.
+
+Hybrid stays the default because personal notes are full of exact terms (names, acronyms, ticket numbers) that embeddings blur, and because its recall@3 equals the best single ranking overall. `--mode vector` and `--mode bm25` are one flag away, and the weight is a parameter (`vectorWeight`).
+
+Read these with their limits in mind: the corpus is the bundled
+[sample notes](sample-notes) (14 notes, 69 passages) and 50 questions is a
+small set, so differences of a few points are noise. A result only counts if it
+is the exact section that answers the question, not just the right note. CI
+fails if hybrid recall@3 drops below 75%. Reproduce with `npm run eval`.
 
 ## Use it with Claude
 
