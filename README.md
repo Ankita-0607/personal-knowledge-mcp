@@ -100,7 +100,7 @@ claude mcp add personal-knowledge --env KB_NOTES_DIR=/absolute/path/to/your/note
 ```
 
 Leave `KB_NOTES_DIR` out to try it with the bundled sample notes. The first
-search downloads the embedding model (about 25 MB) and builds the index; after
+search downloads the embedding model (about 90 MB) and builds the index; after
 that only changed passages are re-embedded.
 
 ### Tools the server exposes
