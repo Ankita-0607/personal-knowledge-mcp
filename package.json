@@ -1,0 +1,30 @@
+{
+  "name": "personal-knowledge-mcp",
+  "version": "0.1.0",
+  "description": "A local-first MCP server that gives Claude searchable, cited access to your own notes: hybrid BM25 + embedding retrieval, grounded answers with citations, and retrieval evals.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "bin": { "personal-knowledge-mcp": "bin/kb.mjs" },
+  "scripts": {
+    "kb": "tsx src/cli.ts",
+    "serve": "tsx src/cli.ts serve",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "eval": "tsx evals/run.ts",
+    "eval:answers": "tsx evals/answers.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "@huggingface/transformers": "^4.3.2",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "commander": "^15.1.0",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

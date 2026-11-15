@@ -1,0 +1,55 @@
+{"id": "q01", "type": "paraphrase", "question": "How often should I meet individually with each person on my team?", "path": "one-on-ones.md", "sections": ["Cadence"]}
+{"id": "q02", "type": "paraphrase", "question": "Who decides what gets discussed in a weekly check-in with a report?", "path": "one-on-ones.md", "sections": ["Agenda"]}
+{"id": "q03", "type": "paraphrase", "question": "What can I ask to get someone to speak openly?", "path": "one-on-ones.md", "sections": ["Questions that open people up"]}
+{"id": "q04", "type": "paraphrase", "question": "When do I make time to talk about someone's professional growth?", "path": "one-on-ones.md", "sections": ["Career conversations"]}
+{"id": "q05", "type": "paraphrase", "question": "How soon after an outage does the write-up need to be finished?", "path": "incident-postmortems.md", "sections": ["When we write one"]}
+{"id": "q06", "type": "paraphrase", "question": "How do I word an incident report so it does not point fingers at an engineer?", "path": "incident-postmortems.md", "sections": ["The blameless rule"]}
+{"id": "q07", "type": "paraphrase", "question": "What sections go into an incident review document?", "path": "incident-postmortems.md", "sections": ["Template"]}
+{"id": "q08", "type": "keyword", "question": "What happens to postmortem action items still open after 60 days?", "path": "incident-postmortems.md", "sections": ["Action items"]}
+{"id": "q09", "type": "keyword", "question": "What are the four DORA metrics?", "path": "delivery-metrics.md", "sections": ["The four key metrics"]}
+{"id": "q10", "type": "paraphrase", "question": "Is it okay to use deployment statistics to evaluate individual engineers?", "path": "delivery-metrics.md", "sections": ["How I use them"]}
+{"id": "q11", "type": "paraphrase", "question": "What mistakes distort how we measure delivery speed?", "path": "delivery-metrics.md", "sections": ["Traps"]}
+{"id": "q12", "type": "paraphrase", "question": "Which part of a legacy system should be split out first?", "path": "monolith-migration.md", "sections": ["Sequencing rule", "Approach: strangler fig"]}
+{"id": "q13", "type": "paraphrase", "question": "How did we keep the old database tables consistent while moving to separate services?", "path": "monolith-migration.md", "sections": ["Data"]}
+{"id": "q14", "type": "keyword", "question": "strangler fig", "path": "monolith-migration.md", "sections": ["Approach: strangler fig"]}
+{"id": "q15", "type": "paraphrase", "question": "What would I change if I did the microservices move again?", "path": "monolith-migration.md", "sections": ["What I would do differently"]}
+{"id": "q16", "type": "paraphrase", "question": "How do we cope with the same message being delivered more than once?", "path": "event-driven-patterns.md", "sections": ["Idempotent consumers"]}
+{"id": "q17", "type": "paraphrase", "question": "How do I make sure a message is sent only if the database write actually committed?", "path": "event-driven-patterns.md", "sections": ["Transactional outbox"]}
+{"id": "q18", "type": "paraphrase", "question": "What do we do with messages that keep failing to process?", "path": "event-driven-patterns.md", "sections": ["Dead-letter queues"]}
+{"id": "q19", "type": "keyword", "question": "DLQ alarm", "path": "event-driven-patterns.md", "sections": ["Dead-letter queues"]}
+{"id": "q20", "type": "paraphrase", "question": "When should a workflow have a central coordinator instead of services reacting to each other?", "path": "event-driven-patterns.md", "sections": ["Choreography or orchestration"]}
+{"id": "q21", "type": "paraphrase", "question": "How can we change the shape of a message without breaking subscribers?", "path": "event-driven-patterns.md", "sections": ["Schema evolution"]}
+{"id": "q22", "type": "paraphrase", "question": "Can engineers paste patient data into an AI assistant?", "path": "ai-adoption-policy.md", "sections": ["Data classification"]}
+{"id": "q23", "type": "paraphrase", "question": "Who is responsible when AI-written code causes a bug?", "path": "ai-adoption-policy.md", "sections": ["Principles"]}
+{"id": "q24", "type": "paraphrase", "question": "What limits apply to autonomous coding agents in our repositories?", "path": "ai-adoption-policy.md", "sections": ["Agentic coding guardrails"]}
+{"id": "q25", "type": "paraphrase", "question": "How should we trial an AI tool before giving it to every team?", "path": "ai-adoption-policy.md", "sections": ["Rollout"]}
+{"id": "q26", "type": "paraphrase", "question": "How do I work out how much the team can take on in an iteration?", "path": "sprint-planning.md", "sections": ["Capacity"]}
+{"id": "q27", "type": "paraphrase", "question": "What does repeated spillover between iterations tell us?", "path": "sprint-planning.md", "sections": ["Carry-over"]}
+{"id": "q28", "type": "paraphrase", "question": "How much room do we leave for urgent production issues?", "path": "sprint-planning.md", "sections": ["Unplanned work"]}
+{"id": "q29", "type": "paraphrase", "question": "How quickly must the outsourcing partner respond to a critical issue?", "path": "vendor-management.md", "sections": ["Contract and SLAs"]}
+{"id": "q30", "type": "paraphrase", "question": "What do we assess our contractor on each month?", "path": "vendor-management.md", "sections": ["Scorecard"]}
+{"id": "q31", "type": "paraphrase", "question": "How long before a new contractor engineer becomes productive?", "path": "vendor-management.md", "sections": ["Capacity planning"]}
+{"id": "q32", "type": "paraphrase", "question": "How do we prevent interviewers from influencing each other's assessments?", "path": "hiring-loop.md", "sections": ["Scorecards"]}
+{"id": "q33", "type": "paraphrase", "question": "Which interview practices did we drop?", "path": "hiring-loop.md", "sections": ["What we stopped doing"]}
+{"id": "q34", "type": "paraphrase", "question": "How should I structure a piece of critical feedback?", "path": "performance-reviews.md", "sections": ["Feedback model"]}
+{"id": "q35", "type": "keyword", "question": "How long does a formal improvement plan last?", "path": "performance-reviews.md", "sections": ["Underperformance"]}
+{"id": "q36", "type": "paraphrase", "question": "What is the purpose of the ratings calibration meeting?", "path": "performance-reviews.md", "sections": ["Calibration"]}
+{"id": "q37", "type": "paraphrase", "question": "On which days do we ship to production?", "path": "release-governance.md", "sections": ["Release train"]}
+{"id": "q38", "type": "paraphrase", "question": "What has to be true before we approve a release?", "path": "release-governance.md", "sections": ["Go or no-go checklist"]}
+{"id": "q39", "type": "paraphrase", "question": "How long can a feature toggle live before it counts as debt?", "path": "release-governance.md", "sections": ["Feature flags"]}
+{"id": "q40", "type": "paraphrase", "question": "When are deployments not allowed?", "path": "release-governance.md", "sections": ["Freeze periods"]}
+{"id": "q41", "type": "paraphrase", "question": "After layoffs, how should I adjust the team's capacity estimate?", "path": "replanning-after-team-change.md", "sections": ["Rebuild capacity honestly"]}
+{"id": "q42", "type": "paraphrase", "question": "How do I decide which roadmap commitments to drop after losing people?", "path": "replanning-after-team-change.md", "sections": ["Triage the roadmap"]}
+{"id": "q43", "type": "paraphrase", "question": "What ratio of lifetime value to acquisition cost is healthy?", "path": "general-management-notes.md", "sections": ["Unit economics"]}
+{"id": "q44", "type": "keyword", "question": "Porter's five forces", "path": "general-management-notes.md", "sections": ["Competitive strategy"]}
+{"id": "q45", "type": "paraphrase", "question": "What gives one side leverage in a negotiation?", "path": "general-management-notes.md", "sections": ["Negotiation"]}
+{"id": "q46", "type": "paraphrase", "question": "Why can a profitable company still go bankrupt?", "path": "general-management-notes.md", "sections": ["Reading financial statements"]}
+{"id": "q47", "type": "keyword", "question": "How many cases does a golden set need?", "path": "llm-application-evals.md", "sections": ["Golden sets"]}
+{"id": "q48", "type": "paraphrase", "question": "How do I check whether the model makes things up when the sources lack the answer?", "path": "llm-application-evals.md", "sections": ["Generation metrics"]}
+{"id": "q49", "type": "keyword", "question": "What does mean reciprocal rank measure?", "path": "llm-application-evals.md", "sections": ["Retrieval metrics"]}
+{"id": "q50", "type": "paraphrase", "question": "Can I trust another model to grade outputs?", "path": "llm-application-evals.md", "sections": ["LLM as judge"]}
+{"id": "u01", "type": "unanswerable", "question": "What is our parental leave policy?"}
+{"id": "u02", "type": "unanswerable", "question": "Which cloud region hosts the production database?"}
+{"id": "u03", "type": "unanswerable", "question": "What was last quarter's revenue?"}
+{"id": "u04", "type": "unanswerable", "question": "Who is the on-call engineer this week?"}
+{"id": "u05", "type": "unanswerable", "question": "Which Kubernetes version do we run in production?"}
