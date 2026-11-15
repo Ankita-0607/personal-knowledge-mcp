@@ -15,17 +15,22 @@ export interface SearchHit {
 }
 
 /**
- * Reciprocal rank fusion: score(d) = sum over rankings of 1 / (k + rank(d)).
+ * Reciprocal rank fusion: score(d) = sum over rankings of weight / (k + rank(d)).
  * It needs no score calibration between BM25 and cosine similarity, which live
- * on unrelated scales, and rewards chunks that both rankings agree on.
+ * on unrelated scales, and rewards chunks that both rankings agree on. The
+ * optional weights let one ranking count for more than the other.
  */
-export function reciprocalRankFusion(rankings: number[][], k = 60): Array<{ index: number; score: number }> {
+export function reciprocalRankFusion(
+  rankings: number[][],
+  k = 60,
+  weights: number[] = rankings.map(() => 1),
+): Array<{ index: number; score: number }> {
   const scores = new Map<number, number>();
-  for (const ranking of rankings) {
+  rankings.forEach((ranking, r) => {
     ranking.forEach((index, position) => {
-      scores.set(index, (scores.get(index) ?? 0) + 1 / (k + position + 1));
+      scores.set(index, (scores.get(index) ?? 0) + (weights[r] ?? 1) / (k + position + 1));
     });
-  }
+  });
   return [...scores.entries()]
     .map(([index, score]) => ({ index, score }))
     .sort((a, b) => b.score - a.score || a.index - b.index);
@@ -36,6 +41,12 @@ function dot(a: Float32Array, b: Float32Array): number {
   for (let i = 0; i < a.length; i++) sum += a[i]! * b[i]!;
   return sum;
 }
+
+/**
+ * How much the embedding ranking counts relative to the keyword ranking in
+ * hybrid mode. Chosen with the weight sweep in evals/run.ts; see the README.
+ */
+export const DEFAULT_VECTOR_WEIGHT = 1;
 
 export class Retriever {
   private readonly bm25: Bm25Index;
@@ -70,7 +81,10 @@ export class Retriever {
       .slice(0, this.candidates);
   }
 
-  async search(query: string, options: { limit?: number; mode?: SearchMode } = {}): Promise<SearchHit[]> {
+  async search(
+    query: string,
+    options: { limit?: number; mode?: SearchMode; vectorWeight?: number } = {},
+  ): Promise<SearchHit[]> {
     const limit = options.limit ?? 5;
     const mode = options.mode ?? "hybrid";
     if (!query.trim() || this.size === 0) return [];
@@ -82,7 +96,10 @@ export class Retriever {
 
     const ranked =
       mode === "hybrid"
-        ? reciprocalRankFusion([keyword.map((h) => h.index), vector.map((h) => h.index)])
+        ? reciprocalRankFusion([keyword.map((h) => h.index), vector.map((h) => h.index)], 60, [
+            1,
+            options.vectorWeight ?? DEFAULT_VECTOR_WEIGHT,
+          ])
         : mode === "bm25"
           ? keyword
           : vector;

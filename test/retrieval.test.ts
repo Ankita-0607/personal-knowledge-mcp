@@ -47,6 +47,15 @@ describe("reciprocalRankFusion", () => {
     expect(fused.map((f) => f.index).sort()).toEqual([10, 20, 30, 40, 50]);
   });
 
+  it("lets a weight make one ranking count for more", () => {
+    const rankings = [
+      [1, 2],
+      [2, 1],
+    ];
+    expect(reciprocalRankFusion(rankings, 60, [1, 3])[0]!.index).toBe(2);
+    expect(reciprocalRankFusion(rankings, 60, [3, 1])[0]!.index).toBe(1);
+  });
+
   it("scores by 1 / (k + rank)", () => {
     const [first] = reciprocalRankFusion([[7], [7]], 60);
     expect(first!.score).toBeCloseTo(2 / 61, 10);

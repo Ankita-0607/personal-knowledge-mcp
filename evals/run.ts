@@ -88,6 +88,45 @@ if (misses.length > 0) {
     lines.push(`- ${miss.id} "${miss.question}" → expected ${miss.path} § ${miss.sections!.join(" / ")}; ${rank ? `found at rank ${rank}` : `not in the top ${DEPTH}`}`);
   }
 }
+// Weight sweep for hybrid fusion. The weight is chosen on the odd-numbered
+// questions (dev) and checked on the even-numbered ones (test), so the default
+// is not tuned on the same questions it is reported on.
+const SWEEP = [0.5, 1, 2, 3, 4, 6];
+const numberOf = (c: GoldenCase) => Number(c.id.slice(1));
+const dev = cases.filter((c) => numberOf(c) % 2 === 1);
+const test = cases.filter((c) => numberOf(c) % 2 === 0);
+const sweep: Array<{ weight: number; dev: Metrics; test: Metrics }> = [];
+for (const weight of SWEEP) {
+  const ranks = new Map<string, number | null>();
+  for (const golden of cases) {
+    const hits = await retriever.search(golden.question, { limit: DEPTH, mode: "hybrid", vectorWeight: weight });
+    const position = hits.findIndex((hit) => isCorrect(hit, golden));
+    ranks.set(golden.id, position === -1 ? null : position + 1);
+  }
+  sweep.push({
+    weight,
+    dev: summarise(dev.map((c) => ranks.get(c.id)!)),
+    test: summarise(test.map((c) => ranks.get(c.id)!)),
+  });
+}
+lines.push(
+  "",
+  "### Hybrid fusion: embedding weight sweep",
+  "",
+  `Weight of the embedding ranking relative to the keyword ranking (keyword = 1). Dev = ${dev.length} odd-numbered questions, test = ${test.length} even-numbered.`,
+  "",
+  "| Embedding weight | Dev recall@1 | Dev recall@3 | Dev MRR@10 | Test recall@1 | Test recall@3 | Test MRR@10 |",
+  "|---:|---:|---:|---:|---:|---:|---:|",
+  ...sweep.map(
+    (s) =>
+      `| ${s.weight} | ${pct(s.dev.recall1)} | ${pct(s.dev.recall3)} | ${s.dev.mrr.toFixed(3)} | ${pct(s.test.recall1)} | ${pct(s.test.recall3)} | ${s.test.mrr.toFixed(3)} |`,
+  ),
+  "",
+  "For reference, embeddings alone on the same halves: " +
+    `dev MRR ${metricsFor("vector", dev).mrr.toFixed(3)}, test MRR ${metricsFor("vector", test).mrr.toFixed(3)}; ` +
+    `keyword alone: dev MRR ${metricsFor("bm25", dev).mrr.toFixed(3)}, test MRR ${metricsFor("bm25", test).mrr.toFixed(3)}.`,
+);
+
 const markdown = lines.join("\n");
 console.log(markdown);
 console.error(`\nDone in ${((Date.now() - started) / 1000).toFixed(1)}s`);
@@ -101,6 +140,7 @@ const results = {
   passages: stats.chunks,
   metrics: Object.fromEntries(SEARCH_MODES.map((mode) => [mode, metricsFor(mode, cases)])),
   ranks: Object.fromEntries(SEARCH_MODES.map((mode) => [mode, Object.fromEntries(ranksByMode[mode])])),
+  weight_sweep: sweep,
 };
 fs.mkdirSync(path.join(EVALS_DIR, "results"), { recursive: true });
 fs.writeFileSync(path.join(EVALS_DIR, "results", `${stem}.json`), JSON.stringify(results, null, 2) + "\n");
